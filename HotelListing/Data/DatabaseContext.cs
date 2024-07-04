@@ -3,63 +3,30 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using HotelListing.Configurations.Entities;
 
 namespace HotelListing.Data
 {
-    public class DatabaseContext : DbContext
+    public class DatabaseContext : IdentityDbContext<ApiUser>
     {
         public DatabaseContext(DbContextOptions options) : base (options)
         {
         }
-
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.EnableSensitiveDataLogging();
+            // ostatak konfiguracije
+        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Country>().HasData(
-                new Country
-                {
-                    CountryId = 1,
-                    CountryName = "Jamaica",
-                    ShortName = "JM"
-                },
-                new Country
-                {
-                    CountryId = 2,
-                    CountryName = "Bahamas",
-                    ShortName = "BS"
-                },
-                new Country {
-                    CountryId = 3,
-                    CountryName = "Cayman Island",
-                    ShortName = "CI"
-                }
-                );
+            base.OnModelCreating(builder);
 
-            builder.Entity<Hotel>().HasData(
-                new Hotel
-                {
-                    HotelId = 1,
-                    HotelName = "Sandals Resort and Spa",
-                    HotelAdress = "Negril",
-                    CountryId = 1,
-                    HotelRating = 4.5
-                },
-                new Hotel
-                {
-                    HotelId = 2,
-                    HotelName = "Comfort Suites",
-                    HotelAdress = "George Town",
-                    CountryId = 3,
-                    HotelRating = 4.3
-                },
-                new Hotel
-                {
-                    HotelId = 3,
-                    HotelName = "Grand Palladium",
-                    HotelAdress = "Nassua",
-                    CountryId = 2,
-                    HotelRating = 4
-                }
-                );
+            builder.ApplyConfiguration(new RoleConfiguration());
+            builder.ApplyConfiguration(new CountryConfiguration());
+            builder.ApplyConfiguration(new HotelConfiguration());
+         
+
         }
 
         public DbSet<Country> Countries { get; set; }   

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelListing.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class WeatherForecastController : ControllerBase
     {
